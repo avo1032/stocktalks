@@ -40,4 +40,17 @@ export class UserService {
     const savedUser = await this.userRepository.save(user);
     return await this.authService.generateJwtToken(savedUser);
   }
+
+  async logIn(input: { email: string; password: string }) {
+    const { email, password } = input;
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new BadRequestException('이메일이 올바르지 않습니다.');
+    }
+    const validatePassword = await bcrypt.compare(password, user.password);
+    if (!validatePassword) {
+      throw new BadRequestException('비밀번호가 올바르지 않습니다.');
+    }
+    return await this.authService.generateJwtToken(user);
+  }
 }
