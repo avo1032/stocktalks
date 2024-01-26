@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { EmailService } from 'src/email/email.service';
 import * as bcrypt from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -11,6 +12,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private emailService: EmailService,
+    private authService: AuthService,
   ) {}
 
   async signUp(input: {
@@ -28,15 +30,14 @@ export class UserService {
     if (!!isExistUser) {
       throw new BadRequestException('이미 가입되어있는 이메일 입니다.');
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = {
       email,
       password: hashedPassword,
       name,
       comment,
     };
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    return await this.authService.generateJwtToken(savedUser);
   }
 }
