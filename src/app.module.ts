@@ -8,6 +8,7 @@ import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { FollowModule } from './follow/follow.module';
+import { PostreplyModule } from './postreply/postreply.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FollowModule } from './follow/follow.module';
     AuthModule,
     PostModule,
     FollowModule,
+    PostreplyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
