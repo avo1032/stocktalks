@@ -1,4 +1,4 @@
-import { PostReply } from 'src/postreply/entities/postreply.entity';
+import { Post } from 'src/post/entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -6,18 +6,14 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'post' })
-export class Post {
+@Entity({ name: 'postReply' })
+export class PostReply {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  title: string;
 
   @Column()
   content: string;
@@ -31,9 +27,9 @@ export class Post {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.postReplies)
   user: User;
 
-  @OneToMany(() => PostReply, (postReply) => postReply.post, { eager: true })
-  postReplies: PostReply[];
+  @ManyToOne(() => Post, (post) => post.postReplies)
+  post: Post;
 }
