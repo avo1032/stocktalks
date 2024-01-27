@@ -6,6 +6,7 @@ import { LogInUserDto } from './dto/login.user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './dto/accesstoken.response.dto';
 import { SendVerificationEmailDto } from './dto/sendverificationemail.dto';
+import { VerifyEmailDto } from './dto/verify.email.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -23,8 +24,8 @@ export class UserController {
 
   @Get('/email-verify')
   @ApiOperation({ summary: '이메일 인증' })
-  async verifyEmail(@Query('verify_token') verify_token: string) {
-    return this.emailService.verifyEmail(verify_token);
+  async verifyEmail(@Query() query: VerifyEmailDto) {
+    return this.emailService.verifyEmail(query.verify_token);
   }
 
   @Post('sign-up')

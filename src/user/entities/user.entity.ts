@@ -1,3 +1,4 @@
+import { Follow } from 'src/follow/entities/follow.entity';
 import { Post } from 'src/post/entities/post.entity';
 import {
   Column,
@@ -40,4 +41,10 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followers: Follow[];
 }
