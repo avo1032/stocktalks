@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Follow } from 'src/follow/entities/follow.entity';
 import { Post } from 'src/post/entities/post.entity';
 import { PostReply } from 'src/postreply/entities/postreply.entity';
@@ -20,6 +21,7 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column()

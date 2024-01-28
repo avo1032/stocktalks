@@ -24,7 +24,6 @@ export class PostService {
     post.content = content;
     post.user = user;
     await this.postRepository.save(post);
-    delete post.user.password;
     return post;
   }
 }
