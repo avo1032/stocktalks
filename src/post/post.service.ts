@@ -26,4 +26,20 @@ export class PostService {
     await this.postRepository.save(post);
     return post;
   }
+
+  async getAllPost() {
+    return await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .loadRelationCountAndMap('post.repliesCount', 'post.postReplies')
+      .select(['post', 'user.name'])
+      .getMany();
+  }
+
+  async getOnePost(postId: number) {
+    return await this.postRepository.find({
+      where: { id: postId },
+      relations: ['user', 'postReplies', 'postReplies.user'],
+    });
+  }
 }

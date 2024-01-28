@@ -31,7 +31,7 @@ export class PostreplyService {
     reply.post = post;
     reply.content = content;
 
-    const newReply = await this.postRepository.save(reply);
+    const newReply = await this.postReplyRepository.save(reply);
     return newReply;
   }
 }

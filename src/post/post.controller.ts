@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
@@ -15,5 +15,15 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   async createPost(@CurrentUser() user: User, @Body() body: CreatePostDto) {
     return this.postService.createPost(body, user);
+  }
+
+  @Get()
+  async getAllPost() {
+    return this.postService.getAllPost();
+  }
+
+  @Get(':postId')
+  async getOnePost(@Param('postId') postId: number) {
+    return this.postService.getOnePost(postId);
   }
 }

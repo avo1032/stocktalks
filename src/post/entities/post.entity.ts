@@ -34,6 +34,6 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
 
-  @OneToMany(() => PostReply, (postReply) => postReply.post, { eager: true })
+  @OneToMany(() => PostReply, (postReply) => postReply.post)
   postReplies: PostReply[];
 }
