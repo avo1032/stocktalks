@@ -57,4 +57,19 @@ export class PostreplyService {
     await this.postReplyRepository.save(reply);
     return reply;
   }
+
+  async deleteReply(user: User, postReplyId: number) {
+    const reply = await this.postReplyRepository.findOne({
+      where: { id: postReplyId },
+      relations: ['user'],
+    });
+    if (!reply) {
+      throw new BadRequestException('댓글이 존재하지 않습니다.');
+    }
+    if (reply.user.id !== user.id) {
+      ('댓글의 작성자만 삭제할 수 있습니다.');
+    }
+    await this.postReplyRepository.softRemove(reply);
+    return '삭제완료';
+  }
 }

@@ -89,6 +89,6 @@ export class PostService {
       );
     }
     await this.postRepository.softRemove(post);
-    return '삭제되었습니다';
+    return '삭제완료';
   }
 }

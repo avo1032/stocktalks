@@ -1,4 +1,12 @@
-import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { PostreplyService } from './postreply.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
@@ -24,5 +32,15 @@ export class PostreplyController {
   @ApiOperation({ summary: '댓글 수정' })
   async modifyReply(@CurrentUser() user: User, @Body() body: ModifyReplyDto) {
     return this.postReplyService.modifyReply(user, body);
+  }
+
+  @Delete(':postReplyId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '댓글 삭제' })
+  async deleteReply(
+    @CurrentUser() user: User,
+    @Param('replyId') postReplyId: number,
+  ) {
+    return this.postReplyService.deleteReply(user, postReplyId);
   }
 }
