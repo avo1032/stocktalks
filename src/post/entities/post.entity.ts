@@ -34,6 +34,8 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
 
-  @OneToMany(() => PostReply, (postReply) => postReply.post)
+  @OneToMany(() => PostReply, (postReply) => postReply.post, {
+    cascade: ['soft-remove'],
+  })
   postReplies: PostReply[];
 }

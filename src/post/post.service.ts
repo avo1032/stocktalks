@@ -74,4 +74,21 @@ export class PostService {
 
     return post;
   }
+
+  async deletePost(user: User, postId: number) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['user', 'postReplies'],
+    });
+    if (!post) {
+      throw new BadRequestException('포스트가 존재하지 않습니다.');
+    }
+    if (user.id !== post.user.id) {
+      throw new BadRequestException(
+        '해당 포스트의 작성자만 삭제할 수 있습니다.',
+      );
+    }
+    await this.postRepository.softRemove(post);
+    return '삭제되었습니다';
+  }
 }
