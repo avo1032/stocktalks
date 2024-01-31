@@ -34,4 +34,27 @@ export class PostreplyService {
     const newReply = await this.postReplyRepository.save(reply);
     return newReply;
   }
+
+  async modifyReply(
+    user: User,
+    input: {
+      postReplyId: number;
+      content: string;
+    },
+  ) {
+    const { postReplyId, content } = input;
+    const reply = await this.postReplyRepository.findOne({
+      where: { id: postReplyId },
+      relations: ['user'],
+    });
+    if (!reply) {
+      throw new BadRequestException('댓글이 존재하지 않습니다.');
+    }
+    if (reply.user.id !== user.id) {
+      ('댓글의 작성자만 수정할 수 있습니다.');
+    }
+    reply.content = content;
+    await this.postReplyRepository.save(reply);
+    return reply;
+  }
 }
