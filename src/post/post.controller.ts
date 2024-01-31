@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { User } from 'src/user/entities/user.entity';
 import { CreatePostDto } from './dto/create.post.dto';
+import { ModifyPostDto } from './dto/modify.post.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -25,5 +34,11 @@ export class PostController {
   @Get(':postId')
   async getOnePost(@Param('postId') postId: number) {
     return this.postService.getOnePost(postId);
+  }
+
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  async modifyPost(@CurrentUser() user: User, @Body() body: ModifyPostDto) {
+    return this.postService.modifyPost(user, body);
   }
 }

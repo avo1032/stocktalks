@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -37,9 +37,41 @@ export class PostService {
   }
 
   async getOnePost(postId: number) {
-    return await this.postRepository.find({
+    const post = await this.postRepository.findOne({
       where: { id: postId },
       relations: ['user', 'postReplies', 'postReplies.user'],
     });
+    if (!post) {
+      throw new BadRequestException('포스트가 존재하지 않습니다.');
+    }
+    return post;
+  }
+
+  async modifyPost(
+    user: User,
+    input: {
+      postId: number;
+      title: string;
+      content: string;
+    },
+  ) {
+    const { postId, title, content } = input;
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['user', 'postReplies', 'postReplies.user'],
+    });
+    if (!post) {
+      throw new BadRequestException('포스트가 존재하지 않습니다.');
+    }
+    if (user.id !== post.user.id) {
+      throw new BadRequestException(
+        '해당 포스트의 작성자만 삭제할 수 있습니다.',
+      );
+    }
+    !!title ? (post.title = title) : post.title;
+    !!content ? (post.content = content) : post.content;
+    await this.postRepository.save(post);
+
+    return post;
   }
 }
