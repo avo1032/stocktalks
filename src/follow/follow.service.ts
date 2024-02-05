@@ -13,7 +13,7 @@ export class FollowService {
     private userRepository: Repository<User>,
   ) {}
 
-  async createFollow(user: User, followingId: number): Promise<Follow> {
+  async createFollow(user: User, followingId: number) {
     const following = await this.userRepository.findOne({
       where: { id: followingId },
     });
@@ -26,5 +26,20 @@ export class FollowService {
     follow.following = following;
 
     return this.followRepository.save(follow);
+  }
+
+  async deleteFollow(user: User, followingId: number) {
+    const follow = await this.followRepository.findOne({
+      where: {
+        follower: { id: user.id },
+        following: { id: followingId },
+      },
+      relations: ['follower', 'following'],
+    });
+    if (!follow) {
+      throw new BadRequestException('팔로우 관계를 확인할 수 없습니다.');
+    }
+    await this.followRepository.remove(follow);
+    return;
   }
 }

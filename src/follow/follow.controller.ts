@@ -1,4 +1,11 @@
-import { Controller, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { FollowService } from './follow.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorators';
@@ -17,5 +24,15 @@ export class FollowController {
     @CurrentUser() user: User,
   ) {
     return this.followService.createFollow(user, followingId);
+  }
+
+  @Delete(':followingId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  async deleteFollow(
+    @Param('followingId') followingId: number,
+    @CurrentUser() user: User,
+  ) {
+    return this.followService.deleteFollow(user, followingId);
   }
 }
