@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { FollowModule } from './follow/follow.module';
 import { PostreplyModule } from './postreply/postreply.module';
+import { NewspeedModule } from './newspeed/newspeed.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PostreplyModule } from './postreply/postreply.module';
     PostModule,
     FollowModule,
     PostreplyModule,
+    NewspeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
