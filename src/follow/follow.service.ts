@@ -20,6 +20,15 @@ export class FollowService {
     if (!following) {
       throw new BadRequestException('팔로우 유저정보가 올바르지 않습니다.');
     }
+    const isExistFollow = await this.followRepository.findOne({
+      where: {
+        follower: { id: user.id },
+        following: { id: following.id },
+      },
+    });
+    if (!!isExistFollow) {
+      throw new BadRequestException('이미 팔로우 중 입니다.');
+    }
 
     const follow = new Follow();
     follow.follower = user;
